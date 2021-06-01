@@ -1,0 +1,25 @@
+@font-face {
+    font-family: 'JetBrains Mono Bold', monospace;
+    src: url('../fonts/JetBrainsMono-Bold.ttf');
+}
+
+.container {
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.title {
+    font-family: 'JetBrains Mono Bold', monospace;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 40px;
+
+    margin-top: 40px;
+    margin-bottom: 20px;
+}

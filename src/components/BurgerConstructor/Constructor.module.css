@@ -1,0 +1,21 @@
+.item {
+    width: 100%;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.list {
+    overflow-y: scroll;
+    height: 380px;
+    margin-right: -16px;
+    padding-right: 8px;
+}
+
+.total {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+}

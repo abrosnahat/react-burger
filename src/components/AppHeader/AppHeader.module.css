@@ -1,0 +1,43 @@
+.header {
+
+
+    background: #1C1C21;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    height: 88px;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.container {
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+.headerLeft {
+    display: flex;
+}
+
+.button {
+    display: flex;
+    text-decoration: none;
+}
+
+.textConst {
+    color: #F2F2F3;
+    font-size: 16px;
+    line-height: 24px;
+    margin-left: 8px;
+}
+
+.textTape {
+    color: #8585AD;
+    font-size: 16px;
+    line-height: 24px;
+    margin-left: 8px;
+}

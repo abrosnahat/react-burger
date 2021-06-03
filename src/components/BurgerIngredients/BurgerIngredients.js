@@ -1,20 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { Tab, Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import bun1 from '../../images/bun-01.png';
-import bun2 from '../../images/bun-02.png';
-import sauce1 from '../../images/sauce-01.png';
-import sauce2 from '../../images/sauce-02.png';
-import sauce3 from '../../images/sauce-03.png';
-import sauce4 from '../../images/sauce-04.png';
 
-
-
-function BurgerIngredients() {
+const BurgerIngredients = ({ data }) => {
   const [current, setCurrent] = React.useState('one');
 
+  const getTabList = (type) => {
+    return data
+      .filter(item => item.type === type)
+      .map(item => 
+        <div  className={ BurgerIngredientsStyles.tabItem } key={item._id}>
+          <Counter count={1} size="default" className={ BurgerIngredientsStyles.tabCounter } />
+          <img src={item.image} alt={item.name} className={ BurgerIngredientsStyles.tabImg } />
+          <span className={`${BurgerIngredientsStyles.tabPrice} text text_type_main-medium`} >{item.price} </span><CurrencyIcon type="primary" />
+          <p className="text text_type_main-default mt-1">{item.name}</p>
+        </div>
+      );
+  };
+
   return (
-    <div className={ BurgerIngredientsStyles.tab }>
+    <section className={ BurgerIngredientsStyles.tab }>
       <div className={ BurgerIngredientsStyles.tabButton }>
           <Tab value="one" active={current === 'one'} onClick={setCurrent}>
               Булки
@@ -29,54 +35,30 @@ function BurgerIngredients() {
       <div className={ BurgerIngredientsStyles.tabСontent } >
         <p className={ BurgerIngredientsStyles.tabTitle } >Булки</p>
         <div className={ BurgerIngredientsStyles.tabList } >
-          <div  className={ BurgerIngredientsStyles.tabItem }>
-            <Counter count={1} size="default" className={ BurgerIngredientsStyles.tabCounter } />
-            <img src={bun2} className={ BurgerIngredientsStyles.tabImg } />
-            <span className={`${BurgerIngredientsStyles.tabPrice} text text_type_main-medium`} >20 </span><CurrencyIcon type="primary" />
-            <p className="text text_type_main-default mt-1">Краторная булка N-200i</p>
-          </div>
-          <div  className={ BurgerIngredientsStyles.tabItem }>
-    
-            <img src={bun1} className={ BurgerIngredientsStyles.tabImg } />
-            <span className={`${BurgerIngredientsStyles.tabPrice} text text_type_main-medium`} >20 </span><CurrencyIcon type="primary" />
-            <p className="text text_type_main-default mt-1">Флюоресцентная булка R2-D3</p>
-          </div>
+          { getTabList('bun') }
         </div>
 
         <p className={ BurgerIngredientsStyles.tabTitle } >Соусы</p>
         <div className={ BurgerIngredientsStyles.tabList } >
-          <div  className={ BurgerIngredientsStyles.tabItem }>
-            
-            <img src={sauce2} className={ BurgerIngredientsStyles.tabImg } />
-            <span className={`${BurgerIngredientsStyles.tabPrice} text text_type_main-medium`} >30 </span><CurrencyIcon type="primary" />
-            <p className="text text_type_main-default mt-1">Соус Spicy-X</p>
-          </div>
-          <div  className={ BurgerIngredientsStyles.tabItem }>
-    
-            <img src={sauce4} className={ BurgerIngredientsStyles.tabImg } />
-            <span className={`${BurgerIngredientsStyles.tabPrice} text text_type_main-medium`} >30 </span><CurrencyIcon type="primary" />
-            <p className="text text_type_main-default mt-1">Соус фирменный Space Sauce</p>
-          </div>
-          <div  className={ BurgerIngredientsStyles.tabItem }>
-            <Counter count={1} size="default" className={ BurgerIngredientsStyles.tabCounter } />
-            <img src={sauce3} className={ BurgerIngredientsStyles.tabImg } />
-            <span className={`${BurgerIngredientsStyles.tabPrice} text text_type_main-medium`} >30 </span><CurrencyIcon type="primary" />
-            <p className="text text_type_main-default mt-1">Соус Spicy-X</p>
-          </div>
-          <div  className={ BurgerIngredientsStyles.tabItem }>
-    
-            <img src={sauce1} className={ BurgerIngredientsStyles.tabImg } />
-            <span className={`${BurgerIngredientsStyles.tabPrice} text text_type_main-medium`} >30 </span><CurrencyIcon type="primary" />
-            <p className="text text_type_main-default mt-1">Соус фирменный Space Sauce</p>
-          </div>
-            
-            
+          { getTabList('sauce') }
+        </div>
+
+        <p className={ BurgerIngredientsStyles.tabTitle } >Основа</p>
+        <div className={ BurgerIngredientsStyles.tabList } >
+          { getTabList('main') }
         </div>
       </div>
-    </div>
-          
-    )
-   
+    </section>    
+  )
+}
+
+BurgerIngredients.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+          _id: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+          price: PropTypes.number.isRequired,
+          image: PropTypes.string.isRequired
+        }))
 }
 
 export default BurgerIngredients;

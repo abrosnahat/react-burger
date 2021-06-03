@@ -1,6 +1,4 @@
 .header {
-
-
     background: #1C1C21;
 }
 
@@ -11,13 +9,6 @@
     align-items: center;
     font-family: 'JetBrains Mono', monospace;
 }
-
-.container {
-    max-width: 1240px;
-    width: 100%;
-    margin: 0 auto;
-}
-
 
 .headerLeft {
     display: flex;
@@ -36,7 +27,7 @@
 }
 
 .textTape {
-    color: #8585AD;
+    color: var(--text-inactive-color);
     font-size: 16px;
     line-height: 24px;
     margin-left: 8px;

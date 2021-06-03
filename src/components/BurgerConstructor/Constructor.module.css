@@ -19,3 +19,7 @@
     display: flex;
     justify-content: flex-end;
 }
+
+:global(.constructor-element) {
+    width: 488px;
+}

@@ -1,11 +1,6 @@
 @font-face {
     font-family: 'JetBrains Mono Bold', monospace;
-    src: url('../fonts/JetBrainsMono-Bold.ttf');
-}
-
-.container {
-    max-width: 1240px;
-    margin: 0 auto;
+    src: url('../../fonts/JetBrainsMono-Bold.ttf');
 }
 
 .content {

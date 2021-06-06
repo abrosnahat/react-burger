@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import ConstructorStyles from './Constructor.module.css';
+import styles from './Constructor.module.css';
 import bun1 from '../../images/bun-01.png';
 
 
@@ -18,10 +18,10 @@ const BurgerConstructor = ({ data }) => {
         />
       </div>
 
-      <div className={ ConstructorStyles.list }   >
+      <div className={ styles.list }   >
         {
           data.map( item => 
-            <div className={ ConstructorStyles.item } key={item._id}>
+            <div className={ styles.item } key={item._id}>
               <DragIcon type="primary" />
                 <ConstructorElement
                   text={item.name}
@@ -44,7 +44,7 @@ const BurgerConstructor = ({ data }) => {
         />
       </div>
 
-      <div className={`${ConstructorStyles.total} mt-10 mr-4`}>
+      <div className={`${styles.total} mt-10 mr-4`}>
         <span className={"text text_type_digits-medium mr-10"} >610 <CurrencyIcon type="primary" /></span>
       
         <Button type="primary" size="large">

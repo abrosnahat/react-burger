@@ -4,7 +4,7 @@
     max-width: 600px;
 }
 
-.tabСontent {
+.content {
     max-width: 600px;
     max-height: 756px;
     overflow-y: scroll;
@@ -12,18 +12,12 @@
     height: 664px;
 }
 
-.tabСontent:-webkit-scrollbar-thumb {
-    background: #8585AD;
-    border: 3px solid #2F2F37;
-    border-radius: 6px; 
-    
-}
 
 .tabButton {
     display: flex;
 }
 
-.tabTitle { 
+.title { 
     font-family: 'JetBrains Mono Bold', monospace;
     font-style: normal;
     font-weight: bold;
@@ -33,25 +27,25 @@
     margin-bottom: 24px;
 }
 
-.tabList {
+.list {
 
    display: flex;
    flex-wrap: wrap;
  
 }
 
-.tabItem {
+.item {
     position: relative;
     max-width: 272px;
     height: 228px;
     text-align: center;
 }
 
-.tabImg {
+.img {
     margin: 0 16px;
 }
 
-.tabPrice {
+.price {
     vertical-align: top;
     line-height: 24px;
 }

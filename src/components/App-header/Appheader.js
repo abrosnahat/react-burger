@@ -7,7 +7,7 @@ const AppHeader = () => {
   return (
     <header className={ headerStyles.header } >
       <div className="container" >
-        <div className={ headerStyles.content }>
+        <nav className={ headerStyles.content }>
           <nav className={headerStyles.headerLeft} >
             <a className={`${ headerStyles.button } mr-5`} href="#href">
               <BurgerIcon type="primary" />
@@ -18,12 +18,12 @@ const AppHeader = () => {
               <span className={ headerStyles.textTape }>Лента заказов</span>
             </a>
           </nav>
-          <Logo />
+          <a href="#href"><Logo /></a>
           <a className={ headerStyles.button } href="#href">
             <ProfileIcon type="secondary" />
             <span className={ headerStyles.textTape }>Личный кабинет</span>
           </a>
-        </div>
+        </nav>
       </div>
     </header>
   )

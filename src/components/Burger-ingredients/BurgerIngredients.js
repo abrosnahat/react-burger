@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './BurgerIngredients.module.css'
 import { Tab, Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-const BurgerIngredients = ({ data }) => {
+const BurgerIngredients = ({ data, updateActiveIngredient, openIngredientDetails }) => {
   const [current, setCurrent] = React.useState('bun');
   const scrollRefBun = React.useRef(null);
   const scrollRefSauce = React.useRef(null);
@@ -23,14 +23,21 @@ const BurgerIngredients = ({ data }) => {
   const ingredientsList = (type) => {
     return data
       .filter(item => item.type === type)
-      .map(item => 
-        <div  className={ styles.item } key={item._id}>
-          <Counter count={1} size="default" className={ styles.counter } />
-          <img src={item.image} alt={item.name} className={ styles.img } />
-          <span className={`${styles.price} text text_type_main-medium`} >{item.price} </span><CurrencyIcon type="primary" />
-          <p className="text text_type_main-default mt-1">{item.name}</p>
-        </div>
-      );
+      .map(item => {
+        const openDetails = () => {
+          updateActiveIngredient(item);
+          openIngredientDetails();
+        }
+
+        return (
+          <div  className={ styles.item } key={item._id} onClick={openDetails}>
+            <Counter count={1} size="default" className={ styles.counter } />
+            <img src={item.image} alt={item.name} className={ styles.img } />
+            <span className={`${styles.price} text text_type_main-medium`} >{item.price} </span><CurrencyIcon type="primary" />
+            <p className="text text_type_main-default mt-1">{item.name}</p>
+          </div>
+        )
+      });
   };
 
   return (
@@ -72,7 +79,9 @@ BurgerIngredients.propTypes = {
           name: PropTypes.string.isRequired,
           price: PropTypes.number.isRequired,
           image: PropTypes.string.isRequired
-        }))
+        })),
+  openIngredientDetails:  PropTypes.func.isRequired,
+  updateActiveIngredient:  PropTypes.func.isRequired
 }
 
 export default BurgerIngredients;

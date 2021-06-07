@@ -1,0 +1,16 @@
+.content {
+    text-align: center;
+}
+
+.img {
+    width: 480px;
+}
+
+.value {
+    width: 520px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    margin-top: 32px;
+    padding-bottom: 60px;
+}

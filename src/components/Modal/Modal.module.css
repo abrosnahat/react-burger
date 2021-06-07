@@ -1,0 +1,26 @@
+.modal {
+    width: 720px;
+    height: fit-content;
+    position: absolute;
+    margin: auto;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: var(--background);
+    border-radius: 40px;
+}
+
+.close {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    right: 43px;
+    top: 63px;
+    cursor: pointer;
+}
+
+.title {
+    margin-top: 40px;
+    margin-left: 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+}

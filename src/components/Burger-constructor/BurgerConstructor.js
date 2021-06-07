@@ -4,11 +4,12 @@ import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktiku
 import styles from './Constructor.module.css';
 import bun1 from '../../images/bun-01.png';
 
+const BurgerConstructor = ({ data, openOrderDetails, openIngredientDetails, updateActiveIngredient }) => {
 
-const BurgerConstructor = ({ data }) => {
+
   return (
     <section className="pl-4">
-      <div className="ml-8 mb-4" >
+      <div className="ml-8 mb-4">
         <ConstructorElement
           type="top"
           isLocked={true}
@@ -20,21 +21,30 @@ const BurgerConstructor = ({ data }) => {
 
       <div className={ styles.list }   >
         {
-          data.map( item => 
-            <div className={ styles.item } key={item._id}>
-              <DragIcon type="primary" />
-                <ConstructorElement
-                  text={item.name}
-                  price={item.price}
-                  thumbnail={item.image}
-                />
-            </div>
-          )
+          data.map( item => {
+            const openDetails = () => {
+              updateActiveIngredient(item);
+              openIngredientDetails();
+            }
+
+            return (
+              <div className={ styles.item } key={item._id}  >
+                <DragIcon type="primary" />
+                  <div onClick={openDetails}>
+                    <ConstructorElement
+                        text={item.name}
+                        price={item.price}
+                        thumbnail={item.image}
+                      />
+                  </div>
+              </div>
+            )
+          })
         }
       </div>
       
 
-      <div className="ml-8" >
+      <div className="ml-8"  >
         <ConstructorElement
           type="bottom"
           isLocked={true}
@@ -46,13 +56,12 @@ const BurgerConstructor = ({ data }) => {
 
       <div className={`${styles.total} mt-10 mr-4`}>
         <span className={"text text_type_digits-medium mr-10"} >610 <CurrencyIcon type="primary" /></span>
-      
-        <Button type="primary" size="large">
-          Оформить заказ
+        <Button onClick={openOrderDetails} type="primary" size="large">
+            Оформить заказ
         </Button>
       </div>
-      
     </section>
+     
   )
 }
 
@@ -62,7 +71,10 @@ BurgerConstructor.propTypes = {
           name: PropTypes.string.isRequired,
           price: PropTypes.number.isRequired,
           image: PropTypes.string.isRequired
-        }))
+        })),
+  openOrderDetails: PropTypes.func.isRequired,
+  openIngredientDetails:  PropTypes.func.isRequired,
+  updateActiveIngredient:  PropTypes.func.isRequired
 }
 
 export default BurgerConstructor;

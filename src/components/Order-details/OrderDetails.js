@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './OrderDetails.module.css';
 import done from '../../images/done.png';
 
@@ -19,10 +18,6 @@ const OrderDetails = () => {
           </p>
         </>
     )
-}
-
-OrderDetails.propTypes = {
-  onClose: PropTypes.func.isRequired,
 }
 
 export default OrderDetails;

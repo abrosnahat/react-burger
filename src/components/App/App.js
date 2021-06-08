@@ -67,12 +67,12 @@ const App = () => {
       </main>
       {visibleOrderDetails &&
         <Modal onClose={closeModal}>
-          <OrderDetails onClose={closeModal} />
+          <OrderDetails />
         </Modal>
       }
       {visibleIngredientDetails && 
-        <Modal title="Детали ингредиента"  onClose={closeModal}>
-          <IngredientDetails onClose={closeModal} ingredient={activeIngredient} />
+        <Modal title="Детали ингредиента" onClose={closeModal}>
+          <IngredientDetails ingredient={activeIngredient} />
         </Modal>
       }
     </>

@@ -6,7 +6,9 @@ import styles from './Constructor.module.css';
 const BurgerConstructor = ({ data, openOrderDetails, openIngredientDetails, updateActiveIngredient }) => {
   const bun = data[0];
 
-  const totalPrice = data.reduce((acc, item) => acc += item.price, 0);
+  const totalPrice = data
+    .filter(item => item.type !== "bun")
+    .reduce((acc, item) => acc += item.price, 0) + bun.price * 2;
 
   return (
     <section className="pl-4">

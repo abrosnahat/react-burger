@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './OrderDetails.module.css';
-import Modal from '../Modal/Modal';
 import done from '../../images/done.png';
 
-const OrderDetails = ({ onClose }) => {
+const OrderDetails = () => {
     return (
-      <Modal onClose={onClose}> 
         <>
           <p className={`${ styles.id } text text_type_digits-large`}>034536</p>
           <p className={`${ styles.text } text text_type_main-medium`}>
@@ -20,7 +18,6 @@ const OrderDetails = ({ onClose }) => {
             Дождитесь готовности на орбитальной станции
           </p>
         </>
-      </Modal>
     )
 }
 

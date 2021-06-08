@@ -3,7 +3,8 @@ import styles from './App.module.css';
 import AppHeader from '../App-header/Appheader';
 import BurgerIngredients from '../Burger-ingredients/BurgerIngredients';
 import BurgerConstructor from '../Burger-constructor/BurgerConstructor';
-import '../../index.css'
+import '../../index.css';
+import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-details/OrderDetails';
 import IngredientDetails from '../Ingredient-details/IngredientDetails';
 
@@ -22,12 +23,6 @@ const App = () => {
       .catch(e => console.log(e));
   };
 
-  const escClose = (e) => {
-    if(e.keyCode === 27) {
-      closeModal();
-    }
-  }
-
   const openModalOrderDetails = () => {
       setVisibleOrderDetails(true);
   }
@@ -45,15 +40,8 @@ const App = () => {
     setVisibleIngredientDetails(false);
   }
 
-
   React.useEffect(() => {
     getIngredients();
-    
-    document.addEventListener("keydown", escClose);
-
-    return () => {
-      document.removeEventListener("keydown", escClose);
-    }
   }, [])
 
 
@@ -68,20 +56,25 @@ const App = () => {
             updateActiveIngredient={updateActiveIngredient}
             openIngredientDetails={openModalIngredientDetails}
           />
-          <BurgerConstructor
+          {ingredients.length !== 0 && <BurgerConstructor
             data={ingredients}
             openOrderDetails={openModalOrderDetails}
             updateActiveIngredient={updateActiveIngredient}
             openIngredientDetails={openModalIngredientDetails}
-          />
+          />}
+          
         </section>
       </main>
-      <div style={{overflow: 'hidden'}}>
-        {visibleOrderDetails && <OrderDetails onClose={closeModal} />}
-      </div>
-      <div style={{overflow: 'hidden'}}>
-        {visibleIngredientDetails && <IngredientDetails onClose={closeModal} ingredient={activeIngredient} />}
-      </div>
+      {visibleOrderDetails &&
+        <Modal onClose={closeModal}>
+          <OrderDetails onClose={closeModal} />
+        </Modal>
+      }
+      {visibleIngredientDetails && 
+        <Modal title="Детали ингредиента"  onClose={closeModal}>
+          <IngredientDetails onClose={closeModal} ingredient={activeIngredient} />
+        </Modal>
+      }
     </>
   );
 }

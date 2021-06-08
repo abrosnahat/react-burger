@@ -14,3 +14,7 @@
     max-width: 1240px;
     margin: 0 auto;
 }
+
+.constructor-element__text {
+    width: 100%;
+}

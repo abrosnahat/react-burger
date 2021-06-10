@@ -7,6 +7,7 @@ import '../../index.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-details/OrderDetails';
 import IngredientDetails from '../Ingredient-details/IngredientDetails';
+import { DataContext } from '../services/ingredientContext';
 
 const App = () => {
   const apiUrl = 'https://norma.nomoreparties.space/api/ingredients';
@@ -15,6 +16,7 @@ const App = () => {
   const [visibleOrderDetails, setVisibleOrderDetails] = React.useState(false);
   const [visibleIngredientDetails, setVisibleIngredientDetails] = React.useState(false);
   const [activeIngredient, setActiveIngredient] = React.useState({});
+  const [ingredientsID, setIngredientsID] = React.useState([]);
 
   const getIngredients = () => {
     fetch(apiUrl)
@@ -40,10 +42,13 @@ const App = () => {
     setVisibleIngredientDetails(false);
   }
 
+  const updateIngredientsID = (ingredientsID) => {
+    setIngredientsID(ingredientsID);
+  }
+
   React.useEffect(() => {
     getIngredients();
   }, [])
-
 
   return (
     <>
@@ -51,23 +56,27 @@ const App = () => {
       <main className="container" >
         <h1 className={ styles.title } >Соберите бургер</h1>
         <section className={ styles.content} >
-          <BurgerIngredients
-            data={ingredients}
-            updateActiveIngredient={updateActiveIngredient}
-            openIngredientDetails={openModalIngredientDetails}
-          />
-          {ingredients.length !== 0 && <BurgerConstructor
-            data={ingredients}
-            openOrderDetails={openModalOrderDetails}
-            updateActiveIngredient={updateActiveIngredient}
-            openIngredientDetails={openModalIngredientDetails}
-          />}
-          
+          <DataContext.Provider value={ingredients} >
+            <BurgerIngredients
+              data={ingredients}
+              updateActiveIngredient={updateActiveIngredient}
+              openIngredientDetails={openModalIngredientDetails}
+            />
+            {
+              ingredients.length !== 0 &&
+                <BurgerConstructor
+                  openOrderDetails={openModalOrderDetails}
+                  updateActiveIngredient={updateActiveIngredient}
+                  openIngredientDetails={openModalIngredientDetails}
+                  updateIngredientsID={updateIngredientsID}
+                />
+            }
+          </DataContext.Provider>
         </section>
       </main>
       {visibleOrderDetails &&
         <Modal onClose={closeModal}>
-          <OrderDetails />
+          <OrderDetails ingredientsID={ingredientsID} />
         </Modal>
       }
       {visibleIngredientDetails && 

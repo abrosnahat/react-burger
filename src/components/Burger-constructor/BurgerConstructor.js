@@ -2,13 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './Constructor.module.css';
+import { DataContext } from '../services/ingredientContext';
 
-const BurgerConstructor = ({ data, openOrderDetails, openIngredientDetails, updateActiveIngredient }) => {
+const BurgerConstructor = ({ openOrderDetails, openIngredientDetails, updateActiveIngredient, updateIngredientsID }) => {
+  const data = React.useContext(DataContext);
+
+  const ingredients = data.filter(item => item.type !== "bun");
   const bun = data[0];
 
-  const totalPrice = data
-    .filter(item => item.type !== "bun")
-    .reduce((acc, item) => acc += item.price, 0) + bun.price * 2;
+  const totalPrice = ingredients.reduce((acc, item) => acc += item.price, 0) + bun.price * 2;
+
+  const ingredientsID = ingredients.map(item => item._id);
+  ingredientsID.push(bun._id, bun._id);
+
+  React.useEffect(() => {
+    updateIngredientsID(ingredientsID);
+    // eslint-disable-next-line
+  }, [])
+ 
 
   return (
     <section className="pl-4">
@@ -23,8 +34,7 @@ const BurgerConstructor = ({ data, openOrderDetails, openIngredientDetails, upda
       </div>
       <div className={ styles.list }   >
         {
-          data
-            .filter(item => item.type !== "bun")
+          ingredients
             .map( item => {
               const openDetails = () => {
                 updateActiveIngredient(item);
@@ -68,15 +78,10 @@ const BurgerConstructor = ({ data, openOrderDetails, openIngredientDetails, upda
 }
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-          _id: PropTypes.string.isRequired,
-          name: PropTypes.string.isRequired,
-          price: PropTypes.number.isRequired,
-          image: PropTypes.string.isRequired
-        })).isRequired,
   openOrderDetails: PropTypes.func.isRequired,
   openIngredientDetails:  PropTypes.func.isRequired,
-  updateActiveIngredient:  PropTypes.func.isRequired
+  updateActiveIngredient:  PropTypes.func.isRequired,
+  updateIngredientsID: PropTypes.func.isRequired
 }
 
 export default BurgerConstructor;

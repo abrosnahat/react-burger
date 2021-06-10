@@ -2,12 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './BurgerIngredients.module.css'
 import { Tab, Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { DataContext } from '../services/ingredientContext';
 
-const BurgerIngredients = ({ data, updateActiveIngredient, openIngredientDetails }) => {
+const BurgerIngredients = ({ updateActiveIngredient, openIngredientDetails }) => {
   const [current, setCurrent] = React.useState('bun');
   const scrollRefBun = React.useRef(null);
   const scrollRefSauce = React.useRef(null);
   const scrollRefMain = React.useRef(null);
+
+  const data = React.useContext(DataContext);
 
   const handleScroll = (e) => {
     setCurrent(e);
@@ -74,12 +77,6 @@ const BurgerIngredients = ({ data, updateActiveIngredient, openIngredientDetails
 }
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-          _id: PropTypes.string.isRequired,
-          name: PropTypes.string.isRequired,
-          price: PropTypes.number.isRequired,
-          image: PropTypes.string.isRequired
-        })),
   openIngredientDetails:  PropTypes.func.isRequired,
   updateActiveIngredient:  PropTypes.func.isRequired
 }

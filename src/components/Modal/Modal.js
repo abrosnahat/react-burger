@@ -20,6 +20,7 @@ const Modal = ({ children, title, onClose }) => {
     return () => {
       document.removeEventListener("keydown", escClose);
     }
+    // eslint-disable-next-line
   }, [])
 
 

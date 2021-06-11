@@ -2,24 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './Constructor.module.css';
-import { DataContext } from '../services/ingredientContext';
+import { DataContext } from '../../services/ingredientContext';
 
 const BurgerConstructor = ({ openOrderDetails, openIngredientDetails, updateActiveIngredient, updateIngredientsID }) => {
   const data = React.useContext(DataContext);
 
   const ingredients = data.filter(item => item.type !== "bun");
-  const bun = data[0];
+  const bun = data.find(item => item.type === "bun");
 
   const totalPrice = ingredients.reduce((acc, item) => acc += item.price, 0) + bun.price * 2;
 
   const ingredientsID = ingredients.map(item => item._id);
   ingredientsID.push(bun._id, bun._id);
 
-  React.useEffect(() => {
+  const orderBurger = () => {
+    openOrderDetails();
     updateIngredientsID(ingredientsID);
-    // eslint-disable-next-line
-  }, [])
- 
+  }
+
 
   return (
     <section className="pl-4">
@@ -68,7 +68,7 @@ const BurgerConstructor = ({ openOrderDetails, openIngredientDetails, updateActi
 
       <div className={`${styles.total} mt-10 mr-4`}>
         <span className={"text text_type_digits-medium mr-10"} >{totalPrice} <CurrencyIcon type="primary" /></span>
-        <Button onClick={openOrderDetails} type="primary" size="large">
+        <Button onClick={orderBurger} type="primary" size="large">
             Оформить заказ
         </Button>
       </div>

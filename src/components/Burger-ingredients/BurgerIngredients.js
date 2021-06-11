@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './BurgerIngredients.module.css'
 import { Tab, Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { DataContext } from '../services/ingredientContext';
+import { DataContext } from '../../services/ingredientContext';
 
 const BurgerIngredients = ({ updateActiveIngredient, openIngredientDetails }) => {
   const [current, setCurrent] = React.useState('bun');

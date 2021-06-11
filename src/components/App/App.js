@@ -7,7 +7,7 @@ import '../../index.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-details/OrderDetails';
 import IngredientDetails from '../Ingredient-details/IngredientDetails';
-import { DataContext } from '../services/ingredientContext';
+import { DataContext } from '../../services/ingredientContext';
 
 const App = () => {
   const apiUrl = 'https://norma.nomoreparties.space/api/ingredients';
@@ -20,7 +20,12 @@ const App = () => {
 
   const getIngredients = () => {
     fetch(apiUrl)
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка ${res.status}`);
+      })
       .then(data => setIngredients(data.data))
       .catch(e => console.log(e));
   };
@@ -58,7 +63,6 @@ const App = () => {
         <section className={ styles.content} >
           <DataContext.Provider value={ingredients} >
             <BurgerIngredients
-              data={ingredients}
               updateActiveIngredient={updateActiveIngredient}
               openIngredientDetails={openModalIngredientDetails}
             />

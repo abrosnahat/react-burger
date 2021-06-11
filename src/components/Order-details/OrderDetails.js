@@ -13,7 +13,12 @@ const OrderDetails = ({ ingredientsID }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({"ingredients": ingredientsID})
-    }).then(res => res.json())
+    }).then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка ${res.status}`);
+      })
       .then(data => setOrderNumber(data.order.number))
       .catch(e => console.log(e));
   };

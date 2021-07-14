@@ -1,16 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './BurgerIngredients.module.css'
-import { Tab, Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { DataContext } from '../../services/ingredientContext';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { SET_ACTIVE_INGREDIETN } from '../../services/actions/ingredientDetails';
+import BurgerIngredientsCard from './card/BurgerIngredientsCard';
 
-const BurgerIngredients = ({ updateActiveIngredient, openIngredientDetails }) => {
+const BurgerIngredients = ({ openIngredientDetails }) => {
+  const dispatch = useDispatch();
+
   const [current, setCurrent] = React.useState('bun');
   const scrollRefBun = React.useRef(null);
   const scrollRefSauce = React.useRef(null);
   const scrollRefMain = React.useRef(null);
 
-  const data = React.useContext(DataContext);
+  const data = useSelector(state => state.ingredients.data);
 
   const handleScroll = (e) => {
     setCurrent(e);
@@ -23,40 +27,58 @@ const BurgerIngredients = ({ updateActiveIngredient, openIngredientDetails }) =>
         };
   }
 
+  const handleActiveTab = (e) => {
+    const scrollTop = e.target.scrollTop;
+ 
+    const bunTop = scrollRefBun.current.getBoundingClientRect().top;
+    const sauceTop = scrollRefSauce.current.getBoundingClientRect().top;
+    const mainTop = scrollRefMain.current.getBoundingClientRect().top;
+
+    switch (true) {
+      case (scrollTop < bunTop): {
+        setCurrent('bun');
+        break;
+      }
+      case (scrollTop > bunTop && scrollTop < sauceTop): {
+        setCurrent('sauce');
+        break;
+      } 
+      case (scrollTop > mainTop): {
+        setCurrent('main');
+        break;
+      }
+      default:
+        return;
+    }
+  }
+
   const ingredientsList = (type) => {
     return data
       .filter(item => item.type === type)
-      .map(item => {
+      .map((item, index) => {
         const openDetails = () => {
-          updateActiveIngredient(item);
+          dispatch({ type: SET_ACTIVE_INGREDIETN, activeIngredient: item })
           openIngredientDetails();
         }
 
-        return (
-          <div  className={ styles.item } key={item._id} onClick={openDetails}>
-            <Counter count={1} size="default" className={ styles.counter } />
-            <img src={item.image} alt={item.name} className={ styles.img } />
-            <span className={`${styles.price} text text_type_main-medium`} >{item.price} </span><CurrencyIcon type="primary" />
-            <p className="text text_type_main-default mt-1">{item.name}</p>
-          </div>
-        )
+        return (<BurgerIngredientsCard item={item} openDetails={openDetails} key={index} />)
       });
   };
 
   return (
     <section className={ styles.tab }>
       <div className={ styles.tabButton }>
-          <Tab value="bun" active={current === 'bun'} onClick={handleScroll}>
-              Булки
-          </Tab>
-          <Tab value="sauce" active={current === 'sauce'} onClick={handleScroll}>
-              Соусы
-          </Tab>
-          <Tab value="main" active={current === 'main'} onClick={handleScroll}>
-              Начинки
-          </Tab>
+        <Tab value="bun" active={current === 'bun'} onClick={handleScroll}>
+            Булки
+        </Tab>
+        <Tab value="sauce" active={current === 'sauce'} onClick={handleScroll}>
+            Соусы
+        </Tab>
+        <Tab value="main" active={current === 'main'} onClick={handleScroll}>
+            Начинки
+        </Tab>
       </div>
-      <div className={ styles.content } >
+      <div className={ styles.content }  onScroll={handleActiveTab} >
         <p className={ styles.title } ref={scrollRefBun} >Булки</p>
         <div className={ styles.list } >
           { ingredientsList('bun') }
@@ -77,8 +99,7 @@ const BurgerIngredients = ({ updateActiveIngredient, openIngredientDetails }) =>
 }
 
 BurgerIngredients.propTypes = {
-  openIngredientDetails:  PropTypes.func.isRequired,
-  updateActiveIngredient:  PropTypes.func.isRequired
+  openIngredientDetails:  PropTypes.func.isRequired
 }
 
 export default BurgerIngredients;

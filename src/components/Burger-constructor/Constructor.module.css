@@ -9,7 +9,8 @@
 
 .list {
     overflow-y: scroll;
-    height: 380px;
+    max-height: 380px;
+    min-height: 100px;
     margin-right: -16px;
     padding-right: 8px;
 }

@@ -1,32 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './OrderDetails.module.css';
 import done from '../../images/done.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { getOrderNumber } from '../../services/actions/orderDetails';
 
-const OrderDetails = ({ ingredientsID }) => {
-  const apiUrl = 'https://norma.nomoreparties.space/api/orders';
-
-  const [orderNumber, setOrderNumber] = React.useState(null);
-
-  const getOrderNumber = () => {
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({"ingredients": ingredientsID})
-    }).then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-      })
-      .then(data => setOrderNumber(data.order.number))
-      .catch(e => console.log(e));
-  };
+const OrderDetails = () => {
+  const dispatch = useDispatch();
+  const ingredientsID = useSelector(state => state.orderDetails.ingredientsID);
+  const orderNumber = useSelector(state => state.orderDetails.orderNumber);
 
   React.useEffect(() => {
-    getOrderNumber();
-    // eslint-disable-next-line
-  }, [])
+    dispatch(getOrderNumber(ingredientsID));
+  }, [dispatch, ingredientsID]);
+
 
   return (
       <>
@@ -45,8 +31,5 @@ const OrderDetails = ({ ingredientsID }) => {
   )
 }
 
-OrderDetails.propTypes = {
-  ingredientsID: PropTypes.array.isRequired,
-}
 
 export default OrderDetails;

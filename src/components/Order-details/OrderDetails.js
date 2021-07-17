@@ -3,11 +3,11 @@ import styles from './OrderDetails.module.css';
 import done from '../../images/done.png';
 import { useSelector, useDispatch } from 'react-redux';
 import { getOrderNumber } from '../../services/actions/orderDetails';
+import loader from '../../images/loader.svg'
 
 const OrderDetails = () => {
   const dispatch = useDispatch();
-  const ingredientsID = useSelector(state => state.orderDetails.ingredientsID);
-  const orderNumber = useSelector(state => state.orderDetails.orderNumber);
+  const { ingredientsID, orderNumber, isLoading } = useSelector(state => state.orderDetails);
 
   React.useEffect(() => {
     dispatch(getOrderNumber(ingredientsID));
@@ -16,7 +16,10 @@ const OrderDetails = () => {
 
   return (
       <>
-        <p className={`${ styles.id } text text_type_digits-large`}>{orderNumber}</p>
+        {isLoading
+          ? <img src={loader} alt="Loader" className={ styles.loader } />
+          : <p className={`${ styles.id } text text_type_digits-large`}>{orderNumber}</p>
+        }
         <p className={`${ styles.text } text text_type_main-medium`}>
           идентификатор заказа
         </p>

@@ -26,7 +26,7 @@ const BurgerIngredientsCard = ({ item, openDetails }) => {
 
 	return (
     <div ref={item.type === 'bun' ? bunRef : ref} className={ styles.item } key={item._id} onClick={openDetails} style={{opacity}} >
-      {counter !== 0 && <Counter count={counter} size="default" className={ styles.counter } />}
+      {counter !== 0 && <Counter count={item.type === 'bun' ? counter + 1 : counter} size="default" className={ styles.counter } />}
       <img src={item.image} alt={item.name} className={ styles.img } />
       <span className={`${styles.price} text text_type_main-medium`} >{item.price} </span><CurrencyIcon type="primary" />
       <p className="text text_type_main-default mt-1">{item.name}</p>

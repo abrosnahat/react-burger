@@ -1,3 +1,5 @@
+import { CLEAR_CART_INGREDIENT } from './cart';
+
 export const ORDER_NUMBER_REQUEST = "ORDER_NUMBER_REQUEST";
 export const ORDER_NUMBER_SUCCESS = "ORDER_NUMBER_SUCCESS";
 export const ORDER_NUMBER_FAILED = "ORDER_NUMBER_FAILED";
@@ -20,7 +22,10 @@ export const getOrderNumber = (ingredientsID) => {
         }
         return Promise.reject(`Ошибка ${res.status}`);
         })
-        .then(res => dispatch({ type: ORDER_NUMBER_SUCCESS, orderNumber: res.order.number }))
+        .then(res => {
+          dispatch({ type: ORDER_NUMBER_SUCCESS, orderNumber: res.order.number });
+          dispatch({ type: CLEAR_CART_INGREDIENT })
+        })
         .catch(e => {
           dispatch({ type: ORDER_NUMBER_FAILED })
           console.log(e);

@@ -17,8 +17,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 const App = () => {
   const dispatch = useDispatch();
 
-  const visibleOrderDetails = useSelector(state => state.modals.visibleOrderDetails);
-  const visibleIngredientDetails =  useSelector(state => state.modals.visibleIngredientDetails);
+  const { visibleOrderDetails, visibleIngredientDetails }  = useSelector(state => state.modals);
 
   const openModalOrderDetails = () => {
     dispatch({ type: VISIBLE_ORDER_DETAILS, value: true })

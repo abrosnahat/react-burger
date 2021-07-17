@@ -5,6 +5,7 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { SET_ACTIVE_INGREDIETN } from '../../services/actions/ingredientDetails';
 import BurgerIngredientsCard from './card/BurgerIngredientsCard';
+import loader from '../../images/loader.svg';
 
 const BurgerIngredients = ({ openIngredientDetails }) => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const BurgerIngredients = ({ openIngredientDetails }) => {
   const scrollRefSauce = React.useRef(null);
   const scrollRefMain = React.useRef(null);
 
-  const data = useSelector(state => state.ingredients.data);
+  const { data, isLoading } = useSelector(state => state.ingredients);
 
   const handleScroll = (e) => {
     setCurrent(e);
@@ -78,22 +79,25 @@ const BurgerIngredients = ({ openIngredientDetails }) => {
             Начинки
         </Tab>
       </div>
-      <div className={ styles.content }  onScroll={handleActiveTab} >
-        <p className={ styles.title } ref={scrollRefBun} >Булки</p>
-        <div className={ styles.list } >
-          { ingredientsList('bun') }
-        </div>
+      {isLoading
+        ? <img src={loader} alt="Loader" className={ styles.loader } />
+        : (<div className={ styles.content }  onScroll={handleActiveTab} >
+            <p className={ styles.title } ref={scrollRefBun} >Булки</p>
+            <div className={ styles.list } >
+              { ingredientsList('bun') }
+            </div>
 
-        <p className={ styles.title } ref={scrollRefSauce} >Соусы</p>
-        <div className={ styles.list } >
-          { ingredientsList('sauce') }
-        </div>
+            <p className={ styles.title } ref={scrollRefSauce} >Соусы</p>
+            <div className={ styles.list } >
+              { ingredientsList('sauce') }
+            </div>
 
-        <p className={ styles.title } ref={scrollRefMain} >Начинка</p>
-        <div className={ styles.list } >
-          { ingredientsList('main') }
-        </div>
-      </div>
+            <p className={ styles.title } ref={scrollRefMain} >Начинка</p>
+            <div className={ styles.list } >
+              { ingredientsList('main') }
+            </div>
+          </div>)
+      }
     </section>    
   )
 }

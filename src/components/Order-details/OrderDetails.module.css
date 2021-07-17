@@ -23,3 +23,8 @@
     text-align: center;
     margin-top: 8px;
 }
+
+.loader {
+    display: flex;
+    margin: 0 auto;
+}

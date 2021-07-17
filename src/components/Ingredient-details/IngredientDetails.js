@@ -1,8 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './IngredientDetails.module.css';
+import { useSelector } from 'react-redux';
 
-const IngredientDetails = ({ ingredient }) => {
+const IngredientDetails = () => {
+  const ingredient =  useSelector(state => state.ingredientDetails.activeIngredient);
+  
   return (
     <div className={ styles.content }>
       <img src={ingredient.image_large} alt={ingredient.name} className={ styles.img } />
@@ -45,17 +47,6 @@ const IngredientDetails = ({ ingredient }) => {
       </section>
     </div>
   )
-}
-
-IngredientDetails.propTypes = {
-  ingredient: PropTypes.shape({
-                name: PropTypes.string.isRequired,
-                image_large: PropTypes.string.isRequired,
-                calories: PropTypes.number.isRequired,
-                proteins: PropTypes.number.isRequired,
-                fat: PropTypes.number.isRequired,
-                carbohydrates: PropTypes.number.isRequired
-              }).isRequired
 }
 
 export default IngredientDetails;

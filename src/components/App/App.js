@@ -1,4 +1,5 @@
 import React from 'react';
+
 import styles from './App.module.css';
 import AppHeader from '../App-header/Appheader';
 import BurgerIngredients from '../Burger-ingredients/BurgerIngredients';
@@ -7,85 +8,59 @@ import '../../index.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-details/OrderDetails';
 import IngredientDetails from '../Ingredient-details/IngredientDetails';
-import { DataContext } from '../../services/ingredientContext';
+import { getIngredients } from '../../services/actions/ingredients';
+import { useSelector, useDispatch } from 'react-redux';
+import { VISIBLE_ORDER_DETAILS, VISIBLE_INGREDIENT_DATAILS } from '../../services/actions/modals';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const App = () => {
-  const apiUrl = 'https://norma.nomoreparties.space/api/ingredients';
+  const dispatch = useDispatch();
 
-  const [ingredients, setIngredients] = React.useState([]);
-  const [visibleOrderDetails, setVisibleOrderDetails] = React.useState(false);
-  const [visibleIngredientDetails, setVisibleIngredientDetails] = React.useState(false);
-  const [activeIngredient, setActiveIngredient] = React.useState({});
-  const [ingredientsID, setIngredientsID] = React.useState([]);
-
-  const getIngredients = () => {
-    fetch(apiUrl)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-      })
-      .then(data => setIngredients(data.data))
-      .catch(e => console.log(e));
-  };
+  const { visibleOrderDetails, visibleIngredientDetails }  = useSelector(state => state.modals);
 
   const openModalOrderDetails = () => {
-      setVisibleOrderDetails(true);
-  }
-  
-  const updateActiveIngredient = (ingredient) => {
-    setActiveIngredient(ingredient);
+    dispatch({ type: VISIBLE_ORDER_DETAILS, value: true })
   }
 
   const openModalIngredientDetails = () => {
-    setVisibleIngredientDetails(true);
+    dispatch({ type: VISIBLE_INGREDIENT_DATAILS, value: true })
   }
 
   const closeModal = () => {
-    setVisibleOrderDetails(false);
-    setVisibleIngredientDetails(false);
-  }
-
-  const updateIngredientsID = (ingredientsID) => {
-    setIngredientsID(ingredientsID);
+    dispatch({ type: VISIBLE_ORDER_DETAILS, value: false })
+    dispatch({ type: VISIBLE_INGREDIENT_DATAILS, value: false })
   }
 
   React.useEffect(() => {
-    getIngredients();
-  }, [])
+    dispatch(getIngredients());
+  }, [dispatch])
 
   return (
     <>
       <AppHeader />
-      <main className="container" >
-        <h1 className={ styles.title } >Соберите бургер</h1>
-        <section className={ styles.content} >
-          <DataContext.Provider value={ingredients} >
+        <main className="container" >
+          <h1 className={ styles.title } >Соберите бургер</h1>
+          <section className={ styles.content} >
+          <DndProvider backend={HTML5Backend}>
             <BurgerIngredients
-              updateActiveIngredient={updateActiveIngredient}
               openIngredientDetails={openModalIngredientDetails}
             />
-            {
-              ingredients.length !== 0 &&
-                <BurgerConstructor
-                  openOrderDetails={openModalOrderDetails}
-                  updateActiveIngredient={updateActiveIngredient}
-                  openIngredientDetails={openModalIngredientDetails}
-                  updateIngredientsID={updateIngredientsID}
-                />
-            }
-          </DataContext.Provider>
-        </section>
-      </main>
+            <BurgerConstructor
+              openOrderDetails={openModalOrderDetails}
+              openIngredientDetails={openModalIngredientDetails}
+            />
+          </DndProvider>
+          </section>
+        </main>
       {visibleOrderDetails &&
         <Modal onClose={closeModal}>
-          <OrderDetails ingredientsID={ingredientsID} />
+          <OrderDetails />
         </Modal>
       }
       {visibleIngredientDetails && 
         <Modal title="Детали ингредиента" onClose={closeModal}>
-          <IngredientDetails ingredient={activeIngredient} />
+          <IngredientDetails />
         </Modal>
       }
     </>

@@ -2,73 +2,153 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './Constructor.module.css';
-import { DataContext } from '../../services/ingredientContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { ORDER_INGREDIENT_ID } from '../../services/actions/orderDetails';
+import { ADD_CART_INGREDIENT, ADD_CART_INGREDIENT_BUN, DELETE_CART_INGREDIENT, MOVE_CART_INGREDIENT } from '../../services/actions/cart';
+import { useDrop, useDrag } from "react-dnd";
 
-const BurgerConstructor = ({ openOrderDetails, openIngredientDetails, updateActiveIngredient, updateIngredientsID }) => {
-  const data = React.useContext(DataContext);
+const BurgerConstructor = ({ openOrderDetails }) => {
+  const dispatch = useDispatch();
+  const data = useSelector(state => state.cart.сartIngredients);
 
-  const ingredients = data.filter(item => item.type !== "bun");
-  const bun = data.find(item => item.type === "bun");
+  const bun = useSelector(state => state.cart.bunIngredients[0]);
 
-  const totalPrice = ingredients.reduce((acc, item) => acc += item.price, 0) + bun.price * 2;
+  const totalPrice = (bun && [bun, ...data] !== 0) ? [bun, bun, ...data].reduce((acc, item) => acc += item.price, 0) : 0;
 
-  const ingredientsID = ingredients.map(item => item._id);
-  ingredientsID.push(bun._id, bun._id);
+  const ingredientsID = data.map(item => item._id);
+  null && ingredientsID.push(bun._id, bun._id);
 
   const orderBurger = () => {
-    openOrderDetails();
-    updateIngredientsID(ingredientsID);
+    if (bun && data.length !== 0) {
+      openOrderDetails();
+      dispatch({ type: ORDER_INGREDIENT_ID, ingredientsID: ingredientsID })
+    }
+ 
   }
 
+  const deleteIngredient = (index) => {
+    dispatch({ type: DELETE_CART_INGREDIENT, ingredients: index })
+  }
 
+  const ConstructorElementItem = ({item, index}) => {
+    const [{opacity}, dragRef] = useDrag({
+      type: "move",
+      item: () => {
+        return { item, index };
+      },
+      collect: monitor => ({
+        opacity: monitor.isDragging() ? 0.5 : 1
+      })
+    })
+
+    const [{padding}, dropRef] = useDrop({
+      accept: "move",
+      drop(ingredients) {
+        dispatch({ type: MOVE_CART_INGREDIENT, ingredients, dropIndex: index })
+      },
+      collect: monitor => ({
+        padding: monitor.isOver()
+      })
+    });
+    
+    const paddingBottom = padding ? '50px' : '0';
+  
+    return (
+      <div ref={dragRef} style={{opacity}}>
+        <div ref={dropRef} style={{paddingBottom}}>
+        <DragIcon type="primary" />
+          <ConstructorElement
+            text={item.name}
+            price={item.price}
+            thumbnail={item.image}
+            handleClose={() => deleteIngredient(index)}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  const [, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop(ingredients) {
+      dispatch({ type: ADD_CART_INGREDIENT, ingredients: ingredients })
+    }
+  });
+
+  const [, bunDropUp] = useDrop({
+    accept: "bun",
+    drop(ingredients) {
+      dispatch({ type: ADD_CART_INGREDIENT_BUN, ingredients })
+    }
+  });
+
+  const [, bunDropDown] = useDrop({
+    accept: "bun",
+    drop(ingredients) {
+      dispatch({ type: ADD_CART_INGREDIENT_BUN, ingredients })
+    }
+  });
+ 
   return (
     <section className="pl-4">
-      <div className="ml-8 mb-4">
-        <ConstructorElement
-          type="top"
-          isLocked={true}
-          text={`${bun.name} (верх)`}
-          price={bun.price}
-          thumbnail={bun.image}
-        />
-      </div>
-      <div className={ styles.list }   >
+      { 
+        bun ?
+          (
+            <div className="ml-8 mb-4" ref={bunDropUp} >
+              <ConstructorElement
+                type="top"
+                isLocked={true}
+                text={`${bun.name} (верх)`}
+                price={bun.price}
+                thumbnail={bun.image}
+              />
+            </div>
+          ) : (
+            <div className="ml-8 mb-4" ref={bunDropUp} >
+              <ConstructorElement
+                type="top"
+                isLocked
+              />
+            </div>
+          )
+      }
+      
+      <div className={ styles.list }  ref={dropTarget} >
         {
-          ingredients
-            .map( item => {
-              const openDetails = () => {
-                updateActiveIngredient(item);
-                openIngredientDetails();
-              }
-
+          data
+            .map( (item, index) => {
               return (
-                <div className={ styles.item } key={item._id}  >
-                  <DragIcon type="primary" />
-                    <div onClick={openDetails}>
-                      <ConstructorElement
-                          text={item.name}
-                          price={item.price}
-                          thumbnail={item.image}
-                        />
-                    </div>
+                <div className={ styles.item } key={`${item._id}${index}`} >
+                  <ConstructorElementItem item={item} index={index} />
                 </div>
             )
           })
         }
       </div>
-      <div className="ml-8"  >
-        <ConstructorElement
-          type="bottom"
-          isLocked={true}
-          text={`${bun.name} (низ)`}
-          price={bun.price}
-          thumbnail={bun.image}
-        />
-      </div>
-
+      { 
+        bun ?
+          (
+            <div className="ml-8 mb-4" ref={bunDropDown}>
+              <ConstructorElement
+                type="bottom"
+                isLocked={true}
+                text={`${bun.name} (низ)`}
+                price={bun.price}
+                thumbnail={bun.image}
+              />
+            </div>
+          ) : (
+            <div className="ml-8 mb-4" ref={bunDropDown}>
+              <ConstructorElement
+                type="bottom"
+                isLocked
+              />
+            </div>
+          )
+      }
       <div className={`${styles.total} mt-10 mr-4`}>
         <span className={"text text_type_digits-medium mr-10"} >{totalPrice} <CurrencyIcon type="primary" /></span>
-        <Button onClick={orderBurger} type="primary" size="large">
+        <Button onClick={orderBurger} type="primary" size="large" >
             Оформить заказ
         </Button>
       </div>
@@ -78,10 +158,7 @@ const BurgerConstructor = ({ openOrderDetails, openIngredientDetails, updateActi
 }
 
 BurgerConstructor.propTypes = {
-  openOrderDetails: PropTypes.func.isRequired,
-  openIngredientDetails:  PropTypes.func.isRequired,
-  updateActiveIngredient:  PropTypes.func.isRequired,
-  updateIngredientsID: PropTypes.func.isRequired
+  openOrderDetails: PropTypes.func.isRequired
 }
 
 export default BurgerConstructor;
